@@ -1,10 +1,13 @@
 module PatchLife
-  def define_patch_life(options={})
-    raise(ArgumentError, "print_patch_warning requires a :version argument to be set") unless options[:version]
-    raise(ArgumentError, "print_patch_warning requires a :patch argument to be set") unless options[:patch]
-    raise(ArgumentError, "print_patch_warning requires either a :message argument, a block to yield, or both") unless options[:message] || block_given?
+  def define_patch_life(options={}, &blk)
+    raise(ArgumentError, "define_patch requires a :version argument to be set") unless options[:version]
+    raise(ArgumentError, "define_patch requires a :patch argument to be set") unless options[:patch]
+    raise(ArgumentError, "define_patch requires either a :message argument, a block to yield, or both") unless options[:message] || block_given?
   
-    past_due = Gem::Version.new(ruby_version) >= Gem::Version.new(options[:version]) && ruby_patch_level >= options[:patch].to_i
+    past_due_version = Gem::Version.new(ruby_version) >= Gem::Version.new(options[:version])
+    past_due_patch = ruby_patch_level >= options[:patch].to_i 
+    past_due = past_due_version && past_due_patch
+
     Kernel.warn(options[:message]) if past_due && options[:message]
     yield if !past_due && block_given?
     #Don't want to return anything at all...
@@ -23,6 +26,6 @@ module PatchLife
   module_function :ruby_patch_level
 end
 
-def define_patch(options={})
-  PatchLife.define_patch_life(options)
+def define_patch(options={}, &blk)
+  PatchLife.define_patch_life(options, &blk)
 end
