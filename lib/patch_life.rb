@@ -23,6 +23,6 @@ module PatchLife
   module_function :ruby_patch_level
 end
 
-def patch_life(options={})
+def define_patch(options={})
   PatchLife.define_patch_life(options)
 end

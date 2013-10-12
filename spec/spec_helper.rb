@@ -1,2 +1,2 @@
 require 'rspec'
-require 'print_patch_warning'
+require 'patch_life'

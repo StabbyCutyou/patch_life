@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PrintPatchWarning do
+describe PatchLife do
   before(:each) do
     #Don't wanna actually fire it...
     Kernel.stub(:warn)
@@ -11,23 +11,23 @@ describe PrintPatchWarning do
     let (:patch) {1}
     let (:message) {"You're outdated"}
     it "requires a version to be delcared" do
-      expect {subject.print_patch_warning}.to raise_error(ArgumentError)
+      expect {subject.define_patch_life}.to raise_error(ArgumentError)
     end
 
     it "requires a patch level to be declared" do
-      expect {subject.print_patch_warning(:version=>version)}.to raise_error(ArgumentError)
+      expect {subject.define_patch_life(:version=>version)}.to raise_error(ArgumentError)
     end
 
     it "requires a message when no block has been yielded" do
-      expect {subject.print_patch_warning(:version=>version, :patch=>patch, :message=>message)}.not_to raise_error
+      expect {subject.define_patch_life(:version=>version, :patch=>patch, :message=>message)}.not_to raise_error
     end
 
     it "requires a block when no message was declared" do
-      expect {subject.print_patch_warning(:version=>version, :patch=>patch) {nil} }.not_to raise_error
+      expect {subject.define_patch_life(:version=>version, :patch=>patch) {nil} }.not_to raise_error
     end
 
     it "allows both a message and a block at the same time" do
-      expect {subject.print_patch_warning(:version=>version, :patch=>patch, :message=>message) {nil} }.not_to raise_error
+      expect {subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil} }.not_to raise_error
     end
   end
 
@@ -39,12 +39,12 @@ describe PrintPatchWarning do
 
       it "will not print a message if defined" do
         Kernel.should_not_receive(:warn).with(message)
-        subject.print_patch_warning(:version=>version, :patch=>patch, :message=>message) {nil}
+        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
       end
 
       it "will yield a block if given" do
         block_called = false
-        subject.print_patch_warning(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
         block_called.should == true
       end
     end
@@ -56,12 +56,12 @@ describe PrintPatchWarning do
       
       it "will print a message if defined" do
         Kernel.should_receive(:warn).with(message)
-        subject.print_patch_warning(:version=>version, :patch=>patch, :message=>message) {nil}
+        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
       end
 
       it "will not yield a block if given" do
         block_called = false
-        subject.print_patch_warning(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
         block_called.should == false
       end
     end
@@ -73,12 +73,12 @@ describe PrintPatchWarning do
 
       it "will print a message if defined" do
         Kernel.should_receive(:warn).with(message)
-        subject.print_patch_warning(:version=>version, :patch=>patch, :message=>message) {nil}
+        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
       end
 
       it "will not yield a block if given" do
         block_called = false
-        subject.print_patch_warning(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
         block_called.should == false
       end
     end
