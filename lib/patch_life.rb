@@ -4,9 +4,10 @@ module PatchLife
     raise(ArgumentError, "define_patch requires a :patch argument to be set") unless options[:patch]
     raise(ArgumentError, "define_patch requires either a :message argument, a block to yield, or both") unless options[:message] || block_given?
   
-    past_due_version = Gem::Version.new(ruby_version) >= Gem::Version.new(options[:version])
+    past_due_version = Gem::Version.new(ruby_version) > Gem::Version.new(options[:version])
+    equivalent_version = Gem::Version.new(ruby_version) == Gem::Version.new(options[:version])
     past_due_patch = ruby_patch_level >= options[:patch].to_i 
-    past_due = past_due_version && past_due_patch
+    past_due = past_due_version || (equivalent_version && past_due_patch)
 
     Kernel.warn(options[:message]) if past_due && options[:message]
     yield if !past_due && block_given?

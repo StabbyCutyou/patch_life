@@ -34,52 +34,141 @@ describe PatchLife do
   context "when comparing ruby versions" do
     context "and the current ruby version is less than the declared version" do
       let (:version) {"9.9.9"}
-      let (:patch) {999}
       let (:message) {"You're outdated"}
-
-      it "will not print a message if defined" do
-        Kernel.should_not_receive(:warn).with(message)
-        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+      context "and the current ruby patch level is less than the declared patch" do
+        let (:patch) {999}
+        it "will not print a message if defined" do
+          Kernel.should_not_receive(:warn).with(message)
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+        end
+  
+        it "will yield a block if given" do
+          block_called = false
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+          block_called.should == true
+        end
       end
 
-      it "will yield a block if given" do
-        block_called = false
-        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
-        block_called.should == true
+      context "and the current ruby patch level is equal to the declared patch" do
+        let (:patch) {RUBY_PATCHLEVEL}
+        it "will not print a message if defined" do
+          Kernel.should_not_receive(:warn).with(message)
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+        end
+  
+        it "will yield a block if given" do
+          block_called = false
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+          block_called.should == true
+        end
+      end
+
+      context "and the current ruby patch level is greater than the declared patch" do
+        let (:patch) {0}
+        it "will not print a message if defined" do
+          Kernel.should_not_receive(:warn).with(message)
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+        end
+  
+        it "will yield a block if given" do
+          block_called = false
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+          block_called.should == true
+        end
       end
     end
 
     context "and the current ruby version is equal to the declared version" do
       let (:version) {RUBY_VERSION.dup}
-      let (:patch) {RUBY_PATCHLEVEL}
       let (:message) {"You're outdated"}
-      
-      it "will print a message if defined" do
-        Kernel.should_receive(:warn).with(message)
-        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+
+      context "and the current ruby patch level is less than the declared patch" do
+        let (:patch) {999}
+        it "will not print a message if defined" do
+          Kernel.should_not_receive(:warn).with(message)
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+        end
+  
+        it "will yield a block if given" do
+          block_called = false
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+          block_called.should == true
+        end
       end
 
-      it "will not yield a block if given" do
-        block_called = false
-        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
-        block_called.should == false
+      context "and the current ruby patch level is equal to the declared patch" do
+        let (:patch) {RUBY_PATCHLEVEL}
+        it "will print a message if defined" do
+          Kernel.should_receive(:warn).with(message)
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+        end
+  
+        it "will not yield a block if given" do
+          block_called = false
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+          block_called.should == false
+        end
+      end
+
+      context "and the current ruby patch level is greater than the declared patch" do
+        let (:patch) {0}
+        it "will print a message if defined" do
+          Kernel.should_receive(:warn).with(message)
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+        end
+  
+        it "will not yield a block if given" do
+          block_called = false
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+          block_called.should == false
+        end
       end
     end
 
     context "and the current ruby version is greater than the declared version" do
       let (:version) {"1.0.0"}
-      let (:patch) {1}
       let (:message) {"You're outdated"}
 
-      it "will print a message if defined" do
-        Kernel.should_receive(:warn).with(message)
-        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+      context "and the current ruby patch level is less than the declared patch" do
+        let(:patch) {999}
+        it "will print a message if defined" do
+          Kernel.should_receive(:warn).with(message)
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+        end
+  
+        it "will not yield a block if given" do
+          block_called = false
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+          block_called.should == false
+        end
       end
 
-      it "will not yield a block if given" do
-        block_called = false
-        subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
-        block_called.should == false
+      context "and the current ruby patch level is equal to the declared patch" do
+        let (:patch) {RUBY_PATCHLEVEL}
+        it "will print a message if defined" do
+          Kernel.should_receive(:warn).with(message)
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+        end
+  
+        it "will not yield a block if given" do
+          block_called = false
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+          block_called.should == false
+        end
+      end
+
+      context "and the current ruby patch level is greater than the declared patch" do
+        let (:patch) {0}
+        it "will print a message if defined" do
+          Kernel.should_receive(:warn).with(message)
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {nil}
+        end
+  
+        it "will not yield a block if given" do
+          block_called = false
+          subject.define_patch_life(:version=>version, :patch=>patch, :message=>message) {block_called=true}
+          block_called.should == false
+        end
       end
     end
   end
