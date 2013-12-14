@@ -1,4 +1,4 @@
-module PatchLife
+class PatchLife
   module Version
     MAJOR = 0
     MINOR = 0
