@@ -153,7 +153,6 @@ describe PatchLife do
       end
 
       context "and the current ruby patch level is equal to the declared patch" do
-        let (:patch) {RUBY_PATCHLEVEL}
         it "will print a message if defined" do
           Kernel.should_receive(:warn).with("You're outdated")
           PatchLife.define_patch do
@@ -177,7 +176,6 @@ describe PatchLife do
       end
 
       context "and the current ruby patch level is greater than the declared patch" do
-        let (:patch) {0}
         it "will print a message if defined" do
           Kernel.should_receive(:warn).with("You're outdated")
           PatchLife.define_patch do
@@ -202,11 +200,7 @@ describe PatchLife do
     end
 
     context "and the current ruby version is greater than the declared version" do
-      let (:version) {"1.0.0"}
-      let (:message) {"You're outdated"}
-
       context "and the current ruby patch level is less than the declared patch" do
-        let(:patch) {999}
         it "will print a message if defined" do
           Kernel.should_receive(:warn).with("You're outdated")
           PatchLife.define_patch do
@@ -230,7 +224,6 @@ describe PatchLife do
       end
 
       context "and the current ruby patch level is equal to the declared patch" do
-        let (:patch) {RUBY_PATCHLEVEL}
         it "will print a message if defined" do
           Kernel.should_receive(:warn).with("You're outdated")
           PatchLife.define_patch do
@@ -254,7 +247,6 @@ describe PatchLife do
       end
 
       context "and the current ruby patch level is greater than the declared patch" do
-        let (:patch) {0}
         it "will print a message if defined" do
           Kernel.should_receive(:warn).with("You're outdated")
           PatchLife.define_patch do
